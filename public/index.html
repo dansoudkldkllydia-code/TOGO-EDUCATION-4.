@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TOGO ÉDUCATION — Version 3</title>
+<style>
+:root{--green:#087f5b;--dark:#07513c;--light:#e9f8f1;--gold:#f4b942;--ink:#18332b;--muted:#64756f}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f8f6;color:var(--ink)}
+header{background:linear-gradient(120deg,#07513c,#0a9b6c);color:white;padding:22px 5%;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+header h1{margin:0;font-size:27px}header p{margin:6px 0 0;color:#e4fff3}
+nav{display:flex;gap:8px;flex-wrap:wrap;background:white;padding:12px 5%;box-shadow:0 3px 10px #0001;position:sticky;top:0;z-index:5}
+nav button,.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--green);color:white;cursor:pointer;font-weight:bold}
+nav button{background:#e8f5ef;color:var(--dark)}nav button.active,nav button:hover{background:var(--green);color:white}
+main{max-width:1100px;margin:25px auto;padding:0 16px}
+.page{display:none}.page.active{display:block}
+.hero{background:linear-gradient(130deg,#e0f7eb,#fff);border-radius:18px;padding:30px;margin-bottom:20px;border:1px solid #d1ebdd}
+.hero h2{font-size:30px;margin:0 0 10px;color:var(--dark)}.hero p{max-width:700px;line-height:1.6}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.card{background:white;border:1px solid #e0ebe5;border-radius:14px;padding:18px;box-shadow:0 5px 15px #153d2b08}
+.card h3{margin-top:0;color:var(--dark)}.muted{color:var(--muted);font-size:14px}
+label{display:block;margin:12px 0 6px;font-weight:bold}select,input{width:100%;padding:11px;border:1px solid #cbd9d1;border-radius:8px;font-size:16px;background:white}
+.result{margin-top:16px;background:#f4fbf7;border-left:4px solid var(--green);padding:16px;border-radius:8px;line-height:1.65}
+.lesson{background:white;padding:20px;border-radius:13px;margin:12px 0;border:1px solid #e1ece5;line-height:1.7}
+.lesson h3{color:var(--dark)}.quiz{padding:14px;background:#fff;border-radius:12px;margin:12px 0;border:1px solid #e1ece5}
+.quiz button{margin:6px 5px 0 0;padding:9px 12px;border:1px solid #b9d8c8;border-radius:8px;background:#f1faf5;cursor:pointer}
+.quiz button:hover{background:#d8f2e4}.feedback{font-weight:bold;margin-top:8px}
+footer{text-align:center;padding:25px;color:var(--muted)}
+.small{font-size:13px}.badge{display:inline-block;background:#fff1c9;color:#755300;padding:5px 9px;border-radius:20px;font-size:12px;font-weight:bold}
+</style>
+</head>
+<body>
+<header>
+ <div><h1>🇹🇬 TOGO ÉDUCATION</h1><p>Apprendre. Réussir. Construire l'avenir.</p></div>
+ <span class="badge">VERSION 3 • hors connexion</span>
+</header>
+<nav>
+ <button class="active" onclick="showPage('accueil',this)">Accueil</button>
+ <button onclick="showPage('cours',this)">Cours</button>
+ <button onclick="showPage('exercices',this)">Exercices</button>
+ <button onclick="showPage('bac',this)">BAC</button>
+ <button onclick="showPage('universite',this)">Université</button>
+ <button onclick="showPage('bibliotheque',this)">Bibliothèque</button>
+ <button onclick="showPage('prof',this)">Professeur IA</button>
+</nav>
+<main>
+<section class="page active" id="accueil">
+ <div class="hero"><h2>Une éducation de qualité pour tous !</h2><p>Révise tes cours, entraîne-toi avec des exercices et prépare tes examens. Cette version fonctionne directement dans ton navigateur, même sans Internet.</p>
+ <button class="btn" onclick="showPage('cours')">Commencer à apprendre</button></div>
+ <div class="cards">
+  <div class="card"><h3>📘 Les cours</h3><p>Choisis ta classe, ta matière et une leçon.</p><button class="btn" onclick="showPage('cours')">Voir les cours</button></div>
+  <div class="card"><h3>✍️ Les exercices</h3><p>Réponds aux questions et vérifie tes réponses.</p><button class="btn" onclick="showPage('exercices')">M'entraîner</button></div>
+  <div class="card"><h3>🎓 Préparation BAC</h3><p>Découvre des conseils de révision et une méthode.</p><button class="btn" onclick="showPage('bac')">Préparer le BAC</button></div>
+  <div class="card"><h3>📊 Ma progression</h3><p id="progressText">Tes résultats seront enregistrés sur cet appareil.</p><button class="btn" onclick="resetScores()">Réinitialiser les scores</button></div>
+ </div>
+</section>
+
+<section class="page" id="cours">
+ <div class="hero"><h2>📘 Espace des cours</h2><p>Sélectionne la classe, la matière puis le chapitre.</p><p class="small">Important : ce fichier contient un premier ensemble de leçons d'initiation. Il ne prétend pas reproduire intégralement les programmes officiels togolais. Les contenus devront être vérifiés et complétés à partir des documents du ministère.</p></div>
+ <div class="card">
+  <label for="classe">Classe</label><select id="classe" onchange="updateLessons()"><option>6e</option><option>5e</option><option>4e</option><option>3e</option><option>Seconde</option><option>Première A</option><option>Première C</option><option>Première D</option><option>Terminale A4</option><option>Terminale C</option><option>Terminale D</option></select>
+  <label for="matiere">Matière</label><select id="matiere" onchange="updateLessons()"><option>Philosophie</option><option>Français</option><option>Anglais</option><option>Allemand</option><option>Histoire-Géographie</option><option>Mathématiques</option><option>SVT</option><option>PCT</option><option>Économie</option><option>Éducation civique</option><option>Informatique</option></select>
+  <label for="lessonSelect">Chapitre / leçon</label><select id="lessonSelect" onchange="renderLesson()"></select>
+  <div id="lessonContent"></div>
+ </div>
+</section>
+
+<section class="page" id="exercices">
+ <div class="hero"><h2>✍️ Exercices interactifs</h2><p>Réponds, puis clique sur « Corriger ». Chaque bonne réponse augmente ton score.</p></div>
+ <div class="quiz"><h3>Philosophie — Question 1</h3><p>Philosopher, c'est principalement…</p>
+ <label><input type="radio" name="q1" value="a" style="width:auto"> répéter sans réfléchir</label>
+ <label><input type="radio" name="q1" value="b" style="width:auto"> questionner et réfléchir de manière critique</label>
+ <label><input type="radio" name="q1" value="c" style="width:auto"> refuser toute discussion</label>
+ <button class="btn" onclick="check('q1','b','f1')">Corriger</button><div id="f1" class="feedback"></div></div>
+ <div class="quiz"><h3>Mathématiques — Question 2</h3><p>Combien vaut 25 × 4 ?</p>
+ <input id="mathAnswer" placeholder="Écris ta réponse">
+ <button class="btn" onclick="checkText('mathAnswer','100','f2')">Corriger</button><div id="f2" class="feedback"></div></div>
+ <div class="quiz"><h3>Économie — Question 3</h3><p>Quand le prix d'un produit augmente, la quantité demandée tend généralement à… (si les autres facteurs ne changent pas)</p>
+ <label><input type="radio" name="q3" value="a" style="width:auto"> augmenter</label>
+ <label><input type="radio" name="q3" value="b" style="width:auto"> diminuer</label>
+ <label><input type="radio" name="q3" value="c" style="width:auto"> rester toujours identique</label>
+ <button class="btn" onclick="check('q3','b','f3')">Corriger</button><div id="f3" class="feedback"></div></div>
+ <div class="result"><strong>Score enregistré :</strong> <span id="score">0</span> bonne(s) réponse(s).</div>
+</section>
+
+<section class="page" id="bac">
+ <div class="hero"><h2>🎓 Préparation au BAC</h2><p>Quelques repères pour organiser tes révisions. Vérifie toujours le programme officiel de ton année.</p></div>
+ <div class="cards">
+ <div class="card"><h3>BAC A4</h3><p>Prévois des fiches de notions, des plans de dissertation et des exercices réguliers.</p><button class="btn" onclick="bacInfo('a4')">Conseils A4</button></div>
+ <div class="card"><h3>BAC C</h3><p>Priorise les exercices progressifs, les formules et la rédaction des solutions.</p><button class="btn" onclick="bacInfo('c')">Conseils C</button></div>
+ <div class="card"><h3>BAC D</h3><p>Combine apprentissage des notions, exercices scientifiques et entraînement aux sujets.</p><button class="btn" onclick="bacInfo('d')">Conseils D</button></div></div>
+ <div id="bacResult" class="result">Choisis une série pour afficher les conseils.</div>
+ <div class="lesson"><h3>Méthode de révision en 5 étapes</h3><ol><li>Lire le cours attentivement.</li><li>Repérer les définitions et idées essentielles.</li><li>Faire une fiche courte.</li><li>Traiter un exercice ou un sujet.</li><li>Corriger ses erreurs et recommencer.</li></ol></div>
+</section>
+
+<section class="page" id="universite">
+ <div class="hero"><h2>🏛️ Espace Université</h2><p>Repères pour commencer les études supérieures.</p></div>
+ <div class="cards">
+ <div class="card"><h3>Économie et Gestion</h3><p>Découvre progressivement la comptabilité, l'économie, les mathématiques et la gestion.</p><button class="btn" onclick="uniInfo('eg')">Voir les repères</button></div>
+ <div class="card"><h3>Droit</h3><p>Initiation aux règles juridiques et à la méthode de lecture des textes.</p><button class="btn" onclick="uniInfo('droit')">Voir les repères</button></div>
+ <div class="card"><h3>Informatique</h3><p>Algorithmique, programmation et outils numériques.</p><button class="btn" onclick="uniInfo('info')">Voir les repères</button></div></div>
+ <div id="uniResult" class="result">Sélectionne un domaine.</div>
+</section>
+
+<section class="page" id="bibliotheque">
+ <div class="hero"><h2>📚 Bibliothèque</h2><p>La bibliothèque numérique sera enrichie avec des fiches et documents pédagogiques.</p></div>
+ <div class="card"><h3>Comment utiliser cet espace ?</h3><p>Les documents pourront être classés par classe, matière, thème et type (fiche, exercice, corrigé).</p><p class="muted">Aucun document externe n'est encore intégré dans cette version.</p></div>
+</section>
+
+<section class="page" id="prof">
+ <div class="hero"><h2>🤖 Professeur IA — Assistant pédagogique</h2><p>Choisis ta matière et pose une question. Le professeur peut t'aider avec des explications guidées et des exemples de démonstration disponibles hors connexion.</p><span class="badge">Connexion IA sécurisée</span></div>
+ <div class="card">
+  <label for="aiClasse">Ta classe</label><select id="aiClasse"><option>6e</option><option>5e</option><option>4e</option><option>3e</option><option>Seconde</option><option>Première A</option><option>Première C</option><option>Première D</option><option selected>Terminale A4</option><option>Terminale C</option><option>Terminale D</option><option>Université</option></select>
+  <label for="aiMatiere">Matière</label><select id="aiMatiere"><option>Philosophie</option><option>Français</option><option>Anglais</option><option>Mathématiques</option><option>Histoire-Géographie</option><option>SVT</option><option>PCT</option><option>Économie</option><option>Comptabilité</option><option>Autre</option></select>
+  <label for="question">Ta question</label><textarea id="question" style="width:100%;min-height:110px;padding:12px;border:1px solid #cbd9d1;border-radius:8px" placeholder="Exemple : explique-moi la philosophie simplement, avec un exemple."></textarea>
+  <button class="btn" id="askBtn" onclick="askAI()">Demander une explication</button>
+  <button class="btn" style="background:#64756f" onclick="clearAI()">Effacer</button>
+  <div id="aiResult" class="result" style="display:none;white-space:pre-wrap"></div>
+  <p class="small muted">Limite honnête : le Professeur IA nécessite Internet et une configuration serveur Netlify avec une clé API. Ne partage jamais cette clé.</p>
+ </div>
+ <div class="cards" style="margin-top:15px">
+  <div class="card"><h3>🧠 Méthode de travail</h3><p>1. Pose une question précise. 2. Lis l'explication. 3. Demande un exemple dans la zone de question. 4. Fais un exercice pour vérifier.</p></div>
+  <div class="card"><h3>💡 Questions pour commencer</h3><button class="btn" onclick="askSample('Explique-moi ce qu’est la philosophie avec un exemple simple.')">Philosophie</button> <button class="btn" onclick="askSample('Explique-moi les pourcentages avec un exercice corrigé.')">Mathématiques</button> <button class="btn" onclick="askSample('Explique-moi la demande en économie avec un exemple au Togo.')">Économie</button></div>
+ </div>
+</section>
+</main>
+<footer>TOGO ÉDUCATION 🇹🇬 • Version 3 • Projet éducatif</footer>
+
+<script>
+const lessons = {
+ "Philosophie":[
+  {t:"Leçon 1 — Introduction à la philosophie",h:"<h3>Définition</h3><p>La philosophie est une réflexion rationnelle et critique sur les grandes questions de l'existence, de la connaissance, de la vérité et de la liberté.</p><h3>Philosopher</h3><p>Philosopher, c'est questionner, examiner les idées, donner des raisons et discuter ses opinions.</p><h3>À retenir</h3><p>Une opinion n'est pas encore une démonstration : il faut la justifier par des arguments.</p>"},
+  {t:"Leçon 2 — Du mythe à la raison",h:"<h3>Le mythe</h3><p>Le mythe est un récit traditionnel qui explique le monde au moyen de personnages et d'événements symboliques.</p><h3>La raison</h3><p>La raison cherche des explications cohérentes en examinant les faits et les arguments.</p><h3>À retenir</h3><p>La réflexion critique demande de questionner les explications et leurs raisons.</p>"},
+  {t:"Leçon 3 — L'étonnement et le questionnement",h:"<h3>L'étonnement</h3><p>L'étonnement naît lorsqu'une chose nous surprend ou nous paraît difficile à comprendre.</p><h3>Le questionnement</h3><p>On transforme l'étonnement en recherche en demandant : pourquoi ? comment ? quelles preuves ?</p><p><strong>Exemple :</strong> « Tout le monde le dit » ne suffit pas à prouver qu'une idée est vraie.</p>"},
+  {t:"Leçon 4 — La vérité et l'opinion",h:"<h3>L'opinion</h3><p>L'opinion est une idée que l'on tient pour vraie, parfois sans preuve suffisante.</p><h3>La vérité</h3><p>Rechercher la vérité exige de vérifier, argumenter et accepter de corriger une erreur.</p><p><strong>À retenir :</strong> avoir confiance en une idée ne suffit pas à la démontrer.</p>"}
+ ],
+ "Français":[
+  {t:"Leçon 1 — La communication",h:"<h3>Définition</h3><p>Communiquer, c'est transmettre un message à un destinataire dans une situation donnée.</p><h3>Les éléments</h3><ul><li>Émetteur : celui qui envoie.</li><li>Récepteur : celui qui reçoit.</li><li>Message : l'information transmise.</li><li>Canal : le moyen utilisé.</li></ul>"},
+  {t:"Leçon 2 — Le texte narratif",h:"<h3>Définition</h3><p>Un texte narratif raconte une suite d'événements, réels ou imaginaires.</p><h3>Repères</h3><p>Repère les personnages, le cadre (lieu et temps), les actions et le narrateur.</p>"},
+  {t:"Leçon 3 — Résumer un texte",h:"<h3>Méthode</h3><ol><li>Lire le texte entièrement.</li><li>Repérer les idées principales.</li><li>Supprimer les exemples et répétitions secondaires.</li><li>Reformuler avec ses propres mots, sans ajouter d'idée.</li></ol>"}
+ ],
+ "Anglais":[
+  {t:"Lesson 1 — Introducing yourself",h:"<h3>Useful expressions</h3><ul><li>Hello = Bonjour</li><li>My name is… = Je m'appelle…</li><li>I am a student = Je suis élève/étudiant</li><li>How are you? = Comment vas-tu ?</li><li>Nice to meet you = Ravi de te rencontrer</li></ul>"},
+  {t:"Lesson 2 — Present simple",h:"<h3>Use</h3><p>The present simple describes habits and general facts. (Il décrit les habitudes et les vérités générales.)</p><p>I study every day. = J'étudie chaque jour.</p><p>She studies every day. = Elle étudie chaque jour.</p><p>Avec he/she/it, on ajoute généralement -s au verbe.</p>"},
+  {t:"Lesson 3 — Asking questions",h:"<h3>Examples</h3><ul><li>What is your name? = Comment t'appelles-tu ?</li><li>Where do you live? = Où habites-tu ?</li><li>How old are you? = Quel âge as-tu ?</li><li>What do you do? = Que fais-tu dans la vie ?</li></ul>"}
+ ],
+ "Allemand":[
+  {t:"Lektion 1 — Sich vorstellen",h:"<h3>Expressions</h3><ul><li>Hallo! = Salut !</li><li>Ich heiße… = Je m'appelle…</li><li>Ich bin Schüler. = Je suis élève.</li><li>Wie heißt du? = Comment t'appelles-tu ?</li><li>Wie geht es dir? = Comment vas-tu ?</li></ul>"}
+ ],
+ "Histoire-Géographie":[
+  {t:"Leçon 1 — Étudier un document",h:"<h3>Méthode</h3><ol><li>Identifier la nature du document.</li><li>Relever l'auteur, la date et le sujet.</li><li>Présenter les informations principales.</li><li>Expliquer ce que le document permet de comprendre.</li></ol>"},
+  {t:"Leçon 2 — Lire une carte",h:"<h3>Repères</h3><p>Lire le titre, la légende, l'échelle et l'orientation. La légende explique les symboles et couleurs. L'échelle permet d'estimer les distances.</p>"},
+  {t:"Leçon 3 — Organiser une réponse",h:"<h3>Plan simple</h3><p>Introduction : présenter le sujet. Développement : expliquer les idées dans un ordre logique et donner des exemples. Conclusion : résumer l'essentiel.</p>"}
+ ],
+ "Mathématiques":[
+  {t:"Leçon 1 — Priorités opératoires",h:"<h3>Règle</h3><p>On calcule d'abord les parenthèses, puis les puissances, puis les multiplications/divisions, enfin les additions/soustractions.</p><p>Exemple : 2 + 3 × 4 = 2 + 12 = 14.</p>"},
+  {t:"Leçon 2 — Pourcentage",h:"<h3>Calcul</h3><p>Pour calculer p % d'un nombre N : (p × N) ÷ 100.</p><p>Exemple : 20 % de 500 = 20 × 500 ÷ 100 = 100.</p>"},
+  {t:"Leçon 3 — Équation simple",h:"<h3>Exemple</h3><p>Résoudre x + 5 = 12 : on soustrait 5 des deux côtés, donc x = 7.</p><p>Vérification : 7 + 5 = 12.</p>"}
+ ],
+ "SVT":[
+  {t:"Leçon 1 — Le vivant et son milieu",h:"<h3>Notions</h3><p>Un être vivant réalise des fonctions vitales : se nourrir, respirer, grandir et se reproduire. Un milieu comprend des éléments vivants et non vivants.</p><p>Les êtres vivants interagissent entre eux et avec leur environnement.</p>"},
+  {t:"Leçon 2 — Hygiène et santé",h:"<h3>Prévention</h3><p>L'hygiène contribue à prévenir certaines maladies : lavage des mains, eau potable, alimentation équilibrée et environnement propre.</p>"}
+ ],
+ "PCT":[
+  {t:"Leçon 1 — Mesurer une grandeur",h:"<h3>Mesure</h3><p>Une grandeur physique se mesure avec un instrument et s'exprime avec une unité.</p><ul><li>Longueur : mètre (m).</li><li>Masse : kilogramme (kg).</li><li>Durée : seconde (s).</li><li>Température : degré Celsius (°C) ou kelvin (K), selon le contexte.</li></ul>"},
+  {t:"Leçon 2 — Sécurité au laboratoire",h:"<h3>Règles</h3><ul><li>Lire les consignes avant de commencer.</li><li>Ne pas goûter ni toucher directement les produits.</li><li>Utiliser le matériel avec prudence.</li><li>Signaler immédiatement un incident.</li></ul>"}
+ ],
+ "Économie":[
+  {t:"Leçon 1 — La demande",h:"<h3>Définition</h3><p>La demande représente la quantité d'un bien ou service que les acheteurs souhaitent et peuvent acheter à différents prix.</p><p>En général, toutes choses égales par ailleurs, lorsque le prix augmente, la quantité demandée diminue.</p>"},
+  {t:"Leçon 2 — L'offre",h:"<h3>Définition</h3><p>L'offre est la quantité d'un bien ou service que les producteurs souhaitent vendre à différents prix.</p><p>En général, toutes choses égales par ailleurs, un prix plus élevé encourage les producteurs à offrir davantage.</p>"},
+  {t:"Leçon 3 — Besoins et biens",h:"<h3>Besoin</h3><p>Un besoin est un sentiment de manque que l'on cherche à satisfaire.</p><h3>Bien</h3><p>Un bien est un produit qui permet de satisfaire un besoin. Certains biens sont matériels, d'autres sont des services.</p>"}
+ ],
+ "Éducation civique":[{t:"Leçon 1 — Droits et devoirs",h:"<h3>Repères</h3><p>Les droits protègent les personnes et leur dignité. Les devoirs correspondent aux responsabilités envers les autres et la collectivité. Le respect des règles contribue à la vie commune.</p>"}],
+ "Informatique":[{t:"Leçon 1 — L'ordinateur",h:"<h3>Composants</h3><p>Un ordinateur comprend des éléments matériels (hardware) et des logiciels (software). Le clavier et la souris servent à saisir ; l'écran affiche ; le processeur traite les instructions ; la mémoire et le stockage conservent des données.</p>"}]
+};
+let score=Number(localStorage.getItem("togoEduScore")||0);
+function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");updateProgress();}
+function updateLessons(){let m=document.getElementById("matiere").value;let list=lessons[m]||[{t:"Contenu en préparation",h:"<p>Cette matière est proposée dans le catalogue, mais les leçons pour cette classe ne sont pas encore intégrées. Les programmes et contenus officiels doivent être vérifiés et ajoutés progressivement.</p>"}];let s=document.getElementById("lessonSelect");s.innerHTML="";list.forEach((l,i)=>{let o=document.createElement("option");o.value=i;o.textContent=l.t;s.appendChild(o)});renderLesson();}
+function renderLesson(){let m=document.getElementById("matiere").value;let list=lessons[m]||[{h:"<p>Contenu en préparation.</p>"}];let item=list[Number(document.getElementById("lessonSelect").value)||0];document.getElementById("lessonContent").innerHTML='<div class="lesson">'+item.h+'</div>';}
+function saveScore(){score++;localStorage.setItem("togoEduScore",score);document.getElementById("score").textContent=score;updateProgress();}
+function check(name,correct,id){let chosen=document.querySelector('input[name="'+name+'"]:checked');let f=document.getElementById(id);if(!chosen){f.textContent="Choisis une réponse d'abord.";f.style.color="#a05b00";return}if(chosen.value===correct){f.textContent="Bonne réponse !";f.style.color="green";if(!f.dataset.done){saveScore();f.dataset.done="1"}}else{f.textContent="Pas encore. Relis la question et réessaie.";f.style.color="crimson"}}
+function checkText(input,correct,id){let v=document.getElementById(input).value.trim().toLowerCase();let f=document.getElementById(id);if(v===correct.toLowerCase()){f.textContent="Bonne réponse !";f.style.color="green";if(!f.dataset.done){saveScore();f.dataset.done="1"}}else{f.textContent="Réessaie. Indice : 25 groupes de 4.";f.style.color="crimson"}}
+function updateProgress(){let el=document.getElementById("progressText");if(el)el.textContent="Tu as obtenu "+score+" bonne(s) réponse(s). Score conservé sur cet appareil.";let s=document.getElementById("score");if(s)s.textContent=score;}
+function resetScores(){if(confirm("Réinitialiser tous les scores enregistrés ?")){score=0;localStorage.setItem("togoEduScore",0);document.querySelectorAll(".feedback").forEach(x=>{x.textContent="";delete x.dataset.done});updateProgress();}}
+function bacInfo(k){let txt={a4:"A4 : travaille les dissertations, les explications de texte et les matières littéraires. Entraîne-toi à construire une introduction, un développement organisé et une conclusion.",c:"C : pratique régulièrement les mathématiques et les sciences. Écris les étapes de calcul et vérifie les unités.",d:"D : équilibre les révisions de mathématiques, sciences et matières littéraires. Comprends les notions avant de mémoriser."};document.getElementById("bacResult").textContent=txt[k];}
+function uniInfo(k){let txt={eg:"Économie et Gestion : commence par les notions d'entreprise, de marché, de comptabilité, de calcul et de statistiques. Les programmes exacts dépendent de ton établissement.",droit:"Droit : apprends à lire précisément les textes, définir les notions et distinguer les faits des règles.",info:"Informatique : entraîne-toi à la logique, aux algorithmes et à la pratique des outils numériques."};document.getElementById("uniResult").textContent=txt[k];}
+function askSample(q){document.getElementById("question").value=q;askAI();}
+let aiHistory=[];
+function clearAI(){document.getElementById("question").value="";aiHistory=[];let r=document.getElementById("aiResult");r.textContent="";r.style.display="none";}
+async function askAI(){
+ let q=document.getElementById("question").value.trim();
+ let mat=document.getElementById("aiMatiere").value;
+ let cl=document.getElementById("aiClasse").value;
+ let r=document.getElementById("aiResult");
+ let btn=document.getElementById("askBtn");
+ if(!q){r.style.display="block";r.textContent="Écris ta question avant de demander une explication.";return;}
+ if(q.length>1500){r.style.display="block";r.textContent="Ta question est trop longue. Maximum : 1 500 caractères.";return;}
+ r.style.display="block";r.textContent="Le professeur réfléchit…";
+ if(btn)btn.disabled=true;
+ try{
+  const response=await fetch("/.netlify/functions/tutor",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,matiere:mat,classe:cl,history:aiHistory})});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok) throw new Error(data.error||("Le service ne répond pas (code "+response.status+"). Vérifie le déploiement Netlify."));
+  const ans=data.answer||"Aucune réponse reçue.";
+  r.textContent=ans;
+  aiHistory.push({role:"user",content:q},{role:"assistant",content:ans});
+  aiHistory=aiHistory.slice(-6);
+ }catch(err){r.textContent="Le professeur IA n'est pas disponible pour le moment. Vérifie ta connexion Internet et le déploiement Netlify. "+(err && err.message ? err.message : "");}
+ finally{if(btn)btn.disabled=false;}
+}
+function init(){updateLessons();updateProgress();}
+init();
+</script>
+</body></html>
